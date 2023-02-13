@@ -7,10 +7,9 @@ void permutations(int* arr,int n,int fixed,int** ans,int *count)
 	{
 		for(int i=0;i<n;i++)
 		{
-			ans[(*count)++]=arr;
-			printf("%d",arr[i]);
+			ans[*count][i]=arr[i];
 		}
-		printf("\n");
+		(*count)++;
 	}
 	else
 	{
@@ -50,14 +49,15 @@ int main()
 	permutations(arr,n,0,ans,&count);
 	free(arr);
 	arr=NULL;
-	/*for(int i=0;i<fact;i++)
+	for(int i=0;i<fact;i++)
 	{
-		printf("%d %p\n",i,ans[i]);
+		for(int j=0;j<n;j++)
+			printf("%d ",ans[i][j]);
+		printf("\n");
 		free(ans[i]);
 		ans[i]=NULL;
 	}
 	free(ans);
-	ans=NULL;
-	*/
+	ans=NULL;	
 	return 0;
 }
