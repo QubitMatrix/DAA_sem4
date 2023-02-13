@@ -7,11 +7,11 @@ void permutations(int* arr,int n,int fixed,int** ans,int *count)
 	{
 		for(int i=0;i<n;i++)
 		{
-			printf("%d",arr[i]);
+			printf("%d ",arr[i]);
 			ans[*count][i]=arr[i];
 		}
 		(*count)++;
-		//ans[(*count)++]=arr;
+		//ans[(*count)++]=arr; this won't work because the arr pointer is modifed across calls and it is reflected here
 		printf("\n");
 	}
 	else

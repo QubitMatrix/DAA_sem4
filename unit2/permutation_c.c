@@ -17,7 +17,7 @@ int main()
 	int count=0;
 	permutations(arr,n,0,ans,&count);
 	printf("Printing from client\n");
-	for(int i=0;i<n;i++)
+	for(int i=0;i<fact;i++)
 	{
 		for(int j=0;j<n;j++)
 			printf("%d ",ans[i][j]);
@@ -25,14 +25,13 @@ int main()
 	}
 	free(arr);
 	arr=NULL;
-	/*for(int i=0;i<fact;i++)
+	for(int i=0;i<fact;i++)
 	{
-		printf("%d %p\n",i,ans[i]);
 		free(ans[i]);
 		ans[i]=NULL;
 	}
 	free(ans);
 	ans=NULL;
-	*/
+
 	return 0;
 }
