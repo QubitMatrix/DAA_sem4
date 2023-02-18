@@ -78,11 +78,29 @@ void sort(char** arr,int n)
         }
     }
 }
+unsigned long hash(char* s)
+{
+    unsigned long hashval=0;
+    char token=s[0];
+    int count=1;
+    while(token!='\0')
+    {
+        hashval=token+31*hashval;
+        token=s[count++];
+    }
+    return hashval%100007;
+}
 char** mostActive(int customers_count, char** customers, int* result_count) {
-    iint counter=0;
-    int dic_len=0;
+    int counter=0;
+    int dic_len=100007;
     int flag=0;
-    dict dic[100000];
+    dict dic[100007];
+    for(int i=0;i<100007;i++)
+    {
+        dic[i].key="";
+        dic[i].value=0;
+    }
+    unsigned long hashval;
     char** arr=calloc(customers_count,sizeof(char*));
     for(int i=0;i<customers_count;i++)
     {
@@ -90,33 +108,30 @@ char** mostActive(int customers_count, char** customers, int* result_count) {
     }
     for(int i=0;i<customers_count;i++)
     {
-        flag=0;
-        for(int j=0;j<dic_len;j++)
-        {
-            if(strcmp(dic[j].key,customers[i])==0)
-            {
-                flag=1;
-                dic[j].value+=1;
-                break;
-            }
-        }
-        if(flag==0)
-        {
-            dic[dic_len].key=customers[i];
-            dic[dic_len].value=1;
-            dic_len++;
-        }
+        hashval=hash(customers[i]);
+        //printf("%ld\n",hashval);
+        dic[hashval].value+=1;
+        dic[hashval].key=customers[i];
     }
+    /*for(int i=0;i<dic_len;i++)
+    {
+        printf("%s %d\n",dic[i].key,dic[i].value);
+    }*/
     for(int i=0;i<dic_len;i++)
     {
-        if(dic[i].value/(float)customers_count>=0.05)
+        //printf("%d %f\n",dic_len,dic[i].value/(float)customers_count);
+        if((float)(dic[i].value/(float)customers_count)>=0.05)
         {
             arr[counter++]=dic[i].key;
         }
     }
+    /*for(int i=0;i<counter;i++)
+    {
+        printf("%s\n",arr[i]);
+    }*/
     sort(arr,counter);
     *result_count=counter;
-    return arr
+    return arr;
 }
 int main()
 {
