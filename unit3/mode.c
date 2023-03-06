@@ -1,42 +1,38 @@
 #include<stdio.h>
 #include<stdlib.h>
-int mode(int* arr,int n)
+#define max(a,b) (a>b?a:b)
+int mode(int* arr,int n,int max_arr)
 {
-	int count=1;
+	int* dic=calloc(max_arr+1,sizeof(int));
 	int mode=0;
-	int max=0;
-	int value=arr[0];
-	for(int i=1;i<n;i++)
+	int maxval=0;
+	for(int i=0;i<n;i++)
 	{
-		if(arr[i]==value)
-			count+=1;
-		else
+		dic[arr[i]]+=1;
+	}
+	for(int i=0;i<n;i++)
+	{
+		if(dic[arr[i]]>maxval)
 		{
-			if(count>max)
-			{
-				max=count;
-				mode=value;
-			}
-			value=arr[i];
-			count=1;
+			maxval=dic[arr[i]];
+			mode=arr[i];
 		}
 	}
 	return mode;
 }
 
-int cmp(const void* a,const void* b)
-{
-	return(*(int*)a-*(int*)b);
-}
 int main()
 {
 	int n;
+	int max_arr=0;
 	scanf("%d",&n);
 	int* arr=calloc(n,sizeof(int));
 	for(int i=0;i<n;i++)
+	{
 		scanf("%d",&arr[i]);
-	qsort(arr,n,sizeof(int),cmp);//presort
-	int mode1=mode(arr,n);
+		max_arr=max(max_arr,arr[i]);
+	}
+	int mode1=mode(arr,n,max_arr);
 	printf("%d\n",mode1);
 	return 0;
 }
