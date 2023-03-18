@@ -41,6 +41,7 @@ void insertQ(queue *ptr_Q,tnode *ele)
 }
 int deleteQ(queue *ptr_Q)
 {
+	static int counter=0;
 	static int count=1;
 	tnode* ele;
 	if(ptr_Q->front==-1)//reseting option
@@ -51,7 +52,29 @@ int deleteQ(queue *ptr_Q)
 		ptr_Q->front=ptr_Q->front+1;
 		if(ptr_Q->front==ptr_Q->rear+1)//last element deletion
 			ptr_Q->front=ptr_Q->rear=-1;
-		printf("Level:%d Data:%d Colour:%d\n",ele->level,ele->data,ele->color);
+		/*if(ele->color)
+			printf("Level:%d Data:\033[31m%d\033[0m\n",ele->level,ele->data);
+		else
+			printf("Level:%d Data:\033[30m%d\033[0m\n",ele->level,ele->data);
+			
+		*/
+		if(counter==ele->level)
+		{
+			if(ele->color)
+				printf("\033[31m%d\033[0m ",ele->data);
+			else
+				printf("\033[30m%d\033[0m ",ele->data);
+
+		}
+		else
+		{
+			counter=ele->level;
+			if(ele->color)
+				printf("\n\033[31m%d\033[0m ",ele->data);
+			else
+				printf("\n\033[30m%d\033[0m ",ele->data);
+
+		}
 		if(ele->left!=NULL)
 		{
 			(ele->left)->level=ele->level+1;
@@ -88,7 +111,7 @@ void destroy(tnode* root)
 }
 tnode* insert_bst(tnode* root,int ele)
 {
-    tnode* newnode=malloc(sizeof(tnode));
+	tnode* newnode=malloc(sizeof(tnode));
     if(ele<root->data)
     {
         if(root->left!=NULL)
@@ -141,10 +164,10 @@ void insert_rbt(tnode** root,int ele)
     tnode* pp=malloc(sizeof(tnode));
     tnode* gp=malloc(sizeof(tnode));
     tnode* uncle=malloc(sizeof(tnode));
-    while(x!=*root && x->parent->color==1)
+    while(x!=*root)//reached root
     {
         newnode=x;
-		if(newnode->parent->color==1 && newnode->color==1)
+		if(newnode->parent->color==1 && newnode->color==1)//parent and child are both red
 		{
 			p=newnode;
 			pp=newnode->parent;
@@ -155,19 +178,21 @@ void insert_rbt(tnode** root,int ele)
 				uncle=gp->left;
 			if(uncle)
 				uncle_color=uncle->color;
-			if(uncle_color==1)
-			{   if(uncle)
-					uncle->color=0;
+			else
+				uncle_color=0;
+			if(uncle_color==1)//if uncle is red do color flips
+			{   
+				uncle->color=0;
 				pp->color=0;
 				gp->color=1;
-				x=gp;
+				x=gp;//gp is red might cause conflict with its' parent
 			}
-			else if(uncle_color==0)
+			else if(uncle_color==0)//if uncle is black rotate and color flip
 			{
 				tnode* t=malloc(sizeof(tnode));
-				if(pp==gp->left)
+				if(pp==gp->left)//LL or LR
 				{
-					if(p==pp->right)
+					if(p==pp->right)//LR case
 					{
 						pp->right=p->left;
 						p->left=pp;
@@ -179,28 +204,29 @@ void insert_rbt(tnode** root,int ele)
 					}
 					gp->left=pp->right;
 					pp->right=gp;
-					if(gp->parent==gp)
+					if(gp->parent==gp)//if rotates caused parent to move to root
 					{
 						*root=pp;
 						(*root)->parent=*root;
 						(*root)->parent->color=0;
+						gp->parent=pp;
 					}
-					else if(gp==gp->parent->left)
+					else if(gp==gp->parent->left)//change child and parents of gp and p after rotation
 					{
 						gp->parent->left=pp;
 						pp->parent=gp->parent;
 						gp->parent=pp;
 					}
-					else if(gp==gp->parent->right)
+					else if(gp==gp->parent->right)//change child and parents of gp and p after rotation
 					{
 						gp->parent->right=pp;
 						pp->parent=gp->parent;
 						gp->parent=pp;
 					}
 				}
-				else
+				else//RL or RR
 				{
-					if(p==pp->left)
+					if(p==pp->left)//RL
 					{
 						pp->left=p->right;
 						p->right=pp;
@@ -212,20 +238,21 @@ void insert_rbt(tnode** root,int ele)
 					}
 					gp->right=pp->left;
 					pp->left=gp;
-					if(gp->parent==gp)
+					if(gp->parent==gp)//if rotates caused parent to move to root
 					{
 						//printf("aa%d",(*root)->data);
 						*root=pp;
 						(*root)->parent=*root;
 						(*root)->parent->color=0;
+						gp->parent=pp;
 					}
-					else if(gp==gp->parent->left)
+					else if(gp==gp->parent->left)//change child and parents of gp and p after rotation
 					{
 						gp->parent->left=pp;
 						pp->parent=gp->parent;
 						gp->parent=pp;
 					}
-					else if(gp==gp->parent->right)
+					else if(gp==gp->parent->right)//change child and parents of gp and p after rotation
 					{
 						gp->parent->right=pp;
 						pp->parent=gp->parent;
@@ -235,13 +262,13 @@ void insert_rbt(tnode** root,int ele)
 				x=pp;
 				pp->color=1-pp->color;
 				gp->color=1-gp->color;
-				(*root)->color=0;
+				(*root)->color=0;//always root is black
 			}
 		}
 		else
 			break;
-   }
-
+		(*root)->color=0;//always root is black
+	}
 }
 int  find_black_height(tnode* root)
 {
@@ -262,13 +289,13 @@ int main()
     int ele;
     scanf("%d",&ele);
     tnode* root=malloc(sizeof(tnode));
-    root->data=ele;
+    root->data=ele;//fill for root
     root->left=NULL;
     root->right=NULL;
     root->color=0;
     root->parent=root;
     root->parent->color=0;
-    for(int i=1;i<n;i++)
+    for(int i=1;i<n;i++)//add others into the tree
     {
         scanf("%d",&ele);
         insert_rbt(&root,ele);
@@ -278,6 +305,7 @@ int main()
     printf("\b\n");
     printf("Level Order Traversal\n");
 	levelorder(root);
+	printf("\n");
 	int h=find_black_height(root);
     printf("Black height of tree=%d\n",h);
     return 0;
