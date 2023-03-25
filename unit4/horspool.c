@@ -22,14 +22,17 @@ void string_match(int* shift_table,char* pattern,char* text)
 	int count;
 	int star_pos=strlen(pattern)-1;
 	char star_char;
+	int cmp=0;
+	int occurance=0;
 	while(star_pos<strlen(text))
 	{
 		star_char=text[star_pos];
-		printf("%d %c\n",star_pos,star_char);
+		//printf("%d %c\n",star_pos,star_char);
 		count=0;
 		for(int i=0;i<strlen(pattern);i++)
 		{
-			printf("%c %c\n",pattern[strlen(pattern)-1-i],text[star_pos-i]);
+			//printf("%c %c\n",pattern[strlen(pattern)-1-i],text[star_pos-i]);
+			cmp++;
 			if(pattern[strlen(pattern)-i-1]!=text[star_pos-i])
 			{
 				star_pos+=shift_table[star_char-'a'];
@@ -40,15 +43,17 @@ void string_match(int* shift_table,char* pattern,char* text)
 				count+=1;
 			}
 		}
-		printf("x%d %d\n",count,strlen(pattern));
 		if(count==strlen(pattern))
 		{
-			printf("%d\n",star_pos-strlen(pattern)+1);
-			break;
+
+				printf("Occurance at %d\n",star_pos-(int)strlen(pattern)+1);
+				occurance+=1;
+				star_pos+=shift_table[star_char-'a'];
 		}
 	}
-	if(count!=strlen(pattern))
-		printf("a-1");
+	if(occurance==0)
+		printf("No occurances\n");
+	printf("No. of occurances=%d\nComparisons:%d\n",occurance,cmp);
 }
 
 int main()
