@@ -1,6 +1,17 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+
+void freeall(int** graph,int** path,int n)
+{
+	for(int i=0;i<n;i++)
+	{
+		free(graph[i]);
+		free(path[i]);
+	}
+	free(graph);
+	free(path);
+}
 int main()
 {
 	int n,e,start,end,cost,src,des;
@@ -78,5 +89,8 @@ int main()
 			printf("%d\ncost=%d\n",src,graph[i][j]);
 		}
 	}
+	freeall(graph,path,n);
+	graph=NULL;
+	path=NULL;
 	return 0;
 }

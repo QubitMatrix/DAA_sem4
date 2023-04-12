@@ -10,6 +10,14 @@ struct table
 };
 typedef struct table table;
 
+void freeall(int** mat,int* sol_vec,table* det,int n)
+{
+	free(sol_vec);
+	free(det);
+	for(int i=0;i<=n;i++)
+		free(mat[i]);
+	free(mat);
+}
 void knapsack(int** mat,table* det,int capacity,int n,int i,int j)
 {
 	int prev=mat[i-1][j];
@@ -84,5 +92,9 @@ int main()
 		printf("%d ",sol_vec[k]);
 	}
 	printf("\n");
+	freeall(mat,sol_vec,det,n);
+	sol_vec=NULL;
+	det=NULL;
+	mat=NULL;
 	return 0;
 }

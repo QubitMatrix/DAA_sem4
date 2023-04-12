@@ -1,7 +1,16 @@
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
-
+void freeall(int** graph,int** path,int n)
+{
+	for(int i=0;i<n;i++)
+	{
+			free(graph[i]);
+			free(path[i]);
+	}
+	free(graph);
+	free(path);
+}
 int main()
 {
 	int n,src,des;
@@ -93,5 +102,8 @@ int main()
 			}
 		}
 	}
+	freeall(mat,path,n);
+	mat=NULL;
+	path=NULL;
 	return 0;
 }
