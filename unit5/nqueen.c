@@ -6,7 +6,7 @@ int place(int queen,int col,int* vector)
 {
 	for(int i=0;i<queen;i++)
 	{
-		if(col==vector[i] || ((abs(queen-i))==1 && abs(col-vector[i])==1))
+		if(col==vector[i] || (abs(queen-i))==abs(col-vector[i]))
 			return 0;
 	}
 	return 1;
